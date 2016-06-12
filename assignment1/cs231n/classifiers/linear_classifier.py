@@ -49,7 +49,9 @@ class LinearClassifier(object):
       # Hint: Use np.random.choice to generate indices. Sampling with         #
       # replacement is faster than sampling without replacement.              #
       #########################################################################
-      pass
+      ind_batch=np.random.choice(len(X),batch_size)
+      X_batch=X[ind_batch]
+      y_batch=y[ind_batch]
       #########################################################################
       #                       END OF YOUR CODE                                #
       #########################################################################
@@ -63,7 +65,7 @@ class LinearClassifier(object):
       # TODO:                                                                 #
       # Update the weights using the gradient and the learning rate.          #
       #########################################################################
-      pass
+      self.W-=learning_rate*grad
       #########################################################################
       #                       END OF YOUR CODE                                #
       #########################################################################
@@ -91,7 +93,8 @@ class LinearClassifier(object):
     # TODO:                                                                   #
     # Implement this method. Store the predicted labels in y_pred.            #
     ###########################################################################
-    pass
+    score_classes=X.dot(self.W)
+    y_pred=np.argmax(score_classes, axis=1)
     ###########################################################################
     #                           END OF YOUR CODE                              #
     ###########################################################################

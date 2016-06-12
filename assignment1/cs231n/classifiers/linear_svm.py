@@ -34,10 +34,14 @@ def svm_loss_naive(W, X, y, reg):
       margin = scores[j] - correct_class_score + 1 # note delta = 1
       if margin > 0:
         loss += margin
+        dW[:,j]+=X[i]
+        dW[:,y[i]]-=X[i]
 
   # Right now the loss is a sum over all training examples, but we want it
   # to be an average instead so we divide by num_train.
+
   loss /= num_train
+  dW /= num_train
 
   # Add regularization to the loss.
   loss += 0.5 * reg * np.sum(W * W)
@@ -61,15 +65,29 @@ def svm_loss_vectorized(W, X, y, reg):
 
   Inputs and outputs are the same as svm_loss_naive.
   """
-  loss = 0.0
-  dW = np.zeros(W.shape) # initialize the gradient as zero
 
   #############################################################################
   # TODO:                                                                     #
   # Implement a vectorized version of the structured SVM loss, storing the    #
   # result in loss.                                                           #
   #############################################################################
-  pass
+  loss = 0.0
+  dW = np.zeros(W.shape) # initialize the gradient as zero
+  num_train=X.shape[0]
+  num_classes=W.shape[1]
+  scores=X.dot(W)
+  cor_scores=scores[np.arange(num_train),y]
+  cor_scores=cor_scores[:,np.newaxis]
+  mar=scores-cor_scores+1
+  margin=np.maximum(mar,0)
+  margin[np.arange(num_train),y]=0
+
+  loss=np.sum(margin)
+  loss /= num_train
+
+  # Add regularization
+  loss += 0.5 * reg * np.sum(W * W)
+#      
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
@@ -84,7 +102,28 @@ def svm_loss_vectorized(W, X, y, reg):
   # to reuse some of the intermediate values that you used to compute the     #
   # loss.                                                                     #
   #############################################################################
-  pass
+  grad_scores=np.zeros(margin.shape)
+  grad_scores[margin>0]=1
+  num_scores=np.sum(grad_scores,axis=1)
+  grad_scores[np.arange(num_train),y]=-num_scores
+  dW=X.T.dot(grad_scores)
+  dW /= num_train
+  dW+=reg*W
+#  binary_scores = np.array(margin != 0, dtype=np.float32)
+#  print np.sum(binary_scores)
+#  print np.sum(grad_scores)
+#  # print("Our binary score's size : " + str(binary_scores.shape))
+#  
+#  # sum them column wise. This gets us the # of times we want to change for dWj
+#  binary_score_col = np.sum(binary_scores, axis = 1)
+#  # print("By summing up our binary score, we get : " + str(binary_score_col))
+#  # print("Binary_score_col size: " + str(binary_score_col.shape))
+#  # print("xrange(num_samples) : " + str(num_samples))
+#  # print("y : " + str(y.shape))
+#  binary_scores[np.arange(num_train), y] = -binary_score_col
+#  print binary_scores
+#  
+#  dW = X.T.dot(binary_scores)/num_train + reg * W
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################

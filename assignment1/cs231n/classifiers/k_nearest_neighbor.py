@@ -119,7 +119,7 @@ class KNearestNeighbor(object):
     # HINT: Try to formulate the l2 distance using matrix multiplication    #
     #       and two broadcast sums.                                         #
     #########################################################################
-    pass
+    dists=(-2)*X.dot(self.X_train.T)+sum((self.X_train*self.X_train).T)+sum((X*X).T).reshape(num_test,1)
     #########################################################################
     #                         END OF YOUR CODE                              #
     #########################################################################
@@ -139,7 +139,6 @@ class KNearestNeighbor(object):
     - y: A numpy array of shape (num_test,) containing predicted labels for the
       test data, where y[i] is the predicted label for the test point X[i].  
     """
-    from collections import Counter
     num_test = dists.shape[0]
     y_pred = np.zeros(num_test)
     for i in xrange(num_test):
@@ -151,11 +150,11 @@ class KNearestNeighbor(object):
       #print np.where(dists[i]==x)
       d_sort=np.argsort(dists[i,:])[:k]
       #print '\n'
-      print d_sort
+      #print d_sort
       for n in d_sort:
-          print n
+          #print n
           closest_y.append(self.y_train[n])
-      print np.shape(closest_y)
+      #print np.shape(closest_y)
       c=Counter(list(closest_y))
       most_com=c.most_common(1)[0][0]
       y_pred[i]=most_com

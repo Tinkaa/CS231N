@@ -66,6 +66,7 @@ class KNearestNeighbor(object):
     dists = np.zeros((num_test, num_train))
     for i in xrange(num_test):
       for j in xrange(num_train):
+        #dists[i,j]=np.sqrt(np.sum(np.square(X[i,:]-self.X_train[j,:])))
         dists[i,j]=np.sqrt(np.sum(np.square(X[i,:]-self.X_train[j,:])))
     return dists
 
@@ -144,19 +145,22 @@ class KNearestNeighbor(object):
     for i in xrange(num_test):
       # A list of length k storing the labels of the k nearest neighbors to
       # the ith test point.
-      closest_y = []
-      #print dists[i][4061]
-      #x=min(dists[i])
-      #print np.where(dists[i]==x)
-      d_sort=np.argsort(dists[i,:])[:k]
-      #print '\n'
-      #print d_sort
-      for n in d_sort:
-          #print n
-          closest_y.append(self.y_train[n])
-      #print np.shape(closest_y)
+#      closest_y = []
+#      d_sort=np.argsort(dists[i,:])[:k]
+#      #print '\n'
+#      print d_sort
+#      for n in d_sort:
+#          #print n
+#          closest_y.append(self.y_train[n])
+#      #print np.shape(closest_y)
+#      print closest_y
+     #way shorter implementation of what was written above
+      closest_y=self.y_train[np.argsort(dists[i,:])[:k]]
+      
       c=Counter(list(closest_y))
       most_com=c.most_common(1)[0][0]
+#      print most_com
+#      print '\n'
       y_pred[i]=most_com
       #########################################################################
       # TODO:                                                                 #

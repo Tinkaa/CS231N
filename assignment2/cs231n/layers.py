@@ -667,7 +667,7 @@ def spatial_batchnorm_backward(dout, cache):
   
   N,C,H,W=dout.shape 
   dim=N*H*W
-  print gamma.shape
+  #print gamma.shape
   #print gamma_resh.shape
   #x_resh=np.reshape(x, (N,dim))
   #gamma_resh=np.repeat(gamma,dim/len(gamma))
